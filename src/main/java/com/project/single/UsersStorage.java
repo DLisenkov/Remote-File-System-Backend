@@ -1,6 +1,6 @@
-package single;
+package com.project.single;
 
-import models.User;
+import com.project.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
