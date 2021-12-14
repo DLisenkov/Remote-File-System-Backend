@@ -18,11 +18,11 @@ public class Permission {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="file_id")
     private File file;
 
-    @OneToOne
-    @JoinColumn(name="parent_id")
+    @ManyToOne
+    @JoinColumn(name="user_id")
     private User user;
 }

@@ -28,4 +28,7 @@ public class User {
 
     @OneToMany(mappedBy = "owner")
     private List<File> files;
+
+    @OneToMany(mappedBy = "file")
+    private List<Permission> permissions;
 }

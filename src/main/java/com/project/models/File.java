@@ -33,11 +33,8 @@ public class File {
 
     @ManyToOne
     @JoinColumn (name="owner_id")
-    private User owner;  //связано с user, в user список файлов
+    private User owner;
 
-    //private List<User> access;
-
-    //таблица permissions с полями idFile и idUser
-    //idFile связано с file
-    //idUser связано с user
+    @OneToMany(mappedBy = "user")
+    private List<Permission> permissions;
 }
