@@ -14,5 +14,5 @@ public interface FilesService {
     public void uploadFile(int userId, MultipartFile file, String path) throws IOException;
     public void uploadDirectory(int userId, String path, String name) throws IOException;
     public Resource downloadFile(int userId, String path) throws IOException;
-    public List<String> downloadDirectory(int userId, String path) throws IOException;
+    public List<File> downloadDirectory(int userId, String path) throws IOException;
 }

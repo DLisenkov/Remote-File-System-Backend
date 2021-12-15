@@ -32,8 +32,43 @@ public class FilesServiceImpl implements FilesService{
     private FilesDao filesDao;
 
     @Override
-    public void uploadFile(int userId, MultipartFile multipartFile, String path) throws IOException {
+    public Resource downloadFile(int userId, String path) throws IOException{
+        Optional<User> userCandidate = usersDao.find(userId);
+        if (userCandidate.isPresent()) {
+            User user = userCandidate.get();
 
+            Path absolutePath = Paths.get(LOAD_PATH + user.getLogin() + path);
+            Resource resource = new UrlResource(absolutePath.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new IOException();
+            }
+        } else {
+            throw new IOException("User not found!");
+        }
+    }
+
+    @Override
+    public List<File> downloadDirectory(int userId, String path) throws IOException {
+        Optional<User> userCandidate = usersDao.find(userId);
+        if (userCandidate.isPresent()) {
+            User user = userCandidate.get();
+
+            String absoluteParentPath = LOAD_PATH + user.getLogin() + path.substring(0, path.length() - 1);
+            Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
+            if (fileCandidate.isPresent()) {
+                return filesDao.findAllByParentFile(fileCandidate.get());
+            } else {
+                throw new IOException("File not found!");
+            }
+        } else {
+            throw new IOException("User not found!");
+        }
+    }
+
+    @Override
+    public void uploadFile(int userId, MultipartFile multipartFile, String path) throws IOException {
         Optional<User> userCandidate = usersDao.find(userId);
         if (userCandidate.isPresent()) {
             User user = userCandidate.get();
@@ -41,7 +76,6 @@ public class FilesServiceImpl implements FilesService{
             createPersonalDirectory(user);
 
             String absolutePath = LOAD_PATH + user.getLogin() + path + multipartFile.getOriginalFilename();
-
             java.io.File file = new java.io.File(absolutePath);
             if (!file.createNewFile()) {
                 throw new IOException("File not created!");
@@ -49,8 +83,8 @@ public class FilesServiceImpl implements FilesService{
             FileOutputStream stream = new FileOutputStream(file.toString());
             stream.write(multipartFile.getBytes());
 
-            String parentPath = LOAD_PATH + user.getLogin() + path.substring(0, path.length() - 1);
-            Optional<File> fileCandidate = filesDao.findFileByPath(parentPath);
+            String absoluteParentPath = LOAD_PATH + user.getLogin() + path.substring(0, path.length() - 1);
+            Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
             if (fileCandidate.isPresent()) {
                 File parentFile = fileCandidate.get();
                 parentFile.setSize(parentFile.getSize() + multipartFile.getSize());
@@ -75,7 +109,6 @@ public class FilesServiceImpl implements FilesService{
 
     @Override
     public void uploadDirectory(int userId, String path, String name) throws IOException {
-
         Optional<User> userCandidate = usersDao.find(userId);
         if (userCandidate.isPresent()) {
             User user = userCandidate.get();
@@ -88,8 +121,8 @@ public class FilesServiceImpl implements FilesService{
                 throw new IOException("Directory not created!");
             }
 
-            String parentPath = LOAD_PATH + user.getLogin() + path.substring(0, path.length() - 1);
-            Optional<File> fileCandidate = filesDao.findFileByPath(parentPath);
+            String absoluteParentPath = LOAD_PATH + user.getLogin() + path.substring(0, path.length() - 1);
+            Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
             if (fileCandidate.isPresent()) {
                 File parentFile = fileCandidate.get();
 
@@ -108,46 +141,6 @@ public class FilesServiceImpl implements FilesService{
             }
         } else {
             throw new IOException("User not found");
-        }
-    }
-
-    @Override
-    public Resource downloadFile(int userId, String path) throws IOException{
-        Optional<User> userCandidate = usersDao.find(userId);
-        if (userCandidate.isPresent()) {
-            User user = userCandidate.get();
-
-            Path absolutePath = Paths.get(LOAD_PATH + user.getLogin() + path);
-            Resource resource = new UrlResource(absolutePath.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            } else {
-                throw new IOException();
-            }
-        } else {
-            throw new IOException("User not found!");
-        }
-    }
-
-    @Override
-    public List<String> downloadDirectory(int userId, String path) throws IOException {
-        Optional<User> userCandidate = usersDao.find(userId);
-        if (userCandidate.isPresent()) {
-            User user = userCandidate.get();
-            String parentPath = LOAD_PATH + user.getLogin() + path.substring(0, path.length() - 1);
-            Optional<File> fileCandidate = filesDao.findFileByPath(parentPath);
-            if (fileCandidate.isPresent()) {
-                List<File> files = filesDao.findAllByParentFile(fileCandidate.get());
-                List<String> fileNames = new ArrayList<>();
-                for (File file: files) {
-                    fileNames.add(file.getName());
-                }
-                return  fileNames;
-            } else {
-                throw new IOException("File not found!");
-            }
-        } else {
-            throw new IOException("User not found!");
         }
     }
 

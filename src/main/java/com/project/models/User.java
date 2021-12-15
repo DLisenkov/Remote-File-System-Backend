@@ -24,6 +24,7 @@ public class User {
     private String login;
     private String hashPassword;
 
+    @Enumerated(value = EnumType.STRING)
     private State state;
 
     @OneToMany(mappedBy = "owner")
