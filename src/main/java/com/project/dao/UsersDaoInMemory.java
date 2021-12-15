@@ -2,10 +2,12 @@ package com.project.dao;
 
 import com.project.models.User;
 import com.project.single.UsersStorage;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component ("UsersDaoInMemory")
 public class UsersDaoInMemory implements UsersDao {
     @Override
     public Optional<User> find(int id) {

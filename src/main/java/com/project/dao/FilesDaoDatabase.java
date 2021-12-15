@@ -1,14 +1,17 @@
 package com.project.dao;
 
 import com.project.models.File;
-import com.project.models.User;
 import com.project.repositories.FilesRepository;
-import com.project.repositories.UsersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component ("FilesDaoDatabase")
 public class FilesDaoDatabase implements FilesDao{
+
+    @Autowired
     FilesRepository filesRepository;
 
     @Override
@@ -34,5 +37,15 @@ public class FilesDaoDatabase implements FilesDao{
     @Override
     public List<File> findAll() {
         return filesRepository.findAll();
+    }
+
+    @Override
+    public Optional<File> findFileByPath(String path) {
+        return filesRepository.findFileByPath(path);
+    }
+
+    @Override
+    public List<File> findAllByParentFile(File parentFile) {
+        return filesRepository.findAllByParentFile(parentFile);
     }
 }

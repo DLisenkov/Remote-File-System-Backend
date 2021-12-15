@@ -1,13 +1,14 @@
 package com.project.dao;
 
 import com.project.models.File;
-import com.project.models.User;
 import com.project.single.FilesStorage;
-import com.project.single.UsersStorage;
+import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Component ("FilesDaoInMemory")
 public class FilesDaoInMemory implements FilesDao{
     @Override
     public Optional<File> find(int id) {
@@ -41,5 +42,26 @@ public class FilesDaoInMemory implements FilesDao{
     @Override
     public List<File> findAll() {
         return FilesStorage.storage().files();
+    }
+
+    @Override
+    public Optional<File> findFileByPath(String path) {
+        for(File file: FilesStorage.storage().files()) {
+            if (file.getPath().equals(path)) {
+                return Optional.of(file);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<File> findAllByParentFile(File parentFile) {
+        List<File> files = new ArrayList<>();
+        for(File file: FilesStorage.storage().files()) {
+            if (file.getParentFile().equals(parentFile)) {
+                files.add(file);
+            }
+        }
+        return files;
     }
 }

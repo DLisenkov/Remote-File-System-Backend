@@ -20,7 +20,6 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    private String type;
     private double size;
     private Date creationDate;
     private Date modificationDate;

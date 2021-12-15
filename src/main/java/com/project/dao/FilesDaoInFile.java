@@ -1,10 +1,12 @@
 package com.project.dao;
 
 import com.project.models.File;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component ("FilesDaoInFile")
 public class FilesDaoInFile implements FilesDao{
     @Override
     public Optional<File> find(int id) {
@@ -28,6 +30,16 @@ public class FilesDaoInFile implements FilesDao{
 
     @Override
     public List<File> findAll() {
+        return null;
+    }
+
+    @Override
+    public Optional<File> findFileByPath(String path) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<File> findAllByParentFile(File parentFile) {
         return null;
     }
 }

@@ -1,10 +1,12 @@
 package com.project.dao;
 
 import com.project.models.User;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
+@Component ("UsersDaoInFile")
 public class UsersDaoInFile implements UsersDao{
     @Override
     public Optional<User> find(int id) {
