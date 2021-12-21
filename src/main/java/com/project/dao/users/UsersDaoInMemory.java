@@ -1,4 +1,4 @@
-package com.project.dao;
+package com.project.dao.users;
 
 import com.project.models.User;
 import com.project.single.UsersStorage;
@@ -41,6 +41,16 @@ public class UsersDaoInMemory implements UsersDao {
     @Override
     public List<User> findAll() {
         return UsersStorage.storage().users();
+    }
+
+    @Override
+    public Optional<User> findOneByLogin(String login) {
+        for(User user: UsersStorage.storage().users()) {
+            if (user.getLogin().equals(login)) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty();
     }
 
     /*

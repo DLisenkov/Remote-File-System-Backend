@@ -1,5 +1,6 @@
-package com.project.dao;
+package com.project.dao.files;
 
+import com.project.dao.CrudDao;
 import com.project.models.File;
 import org.springframework.stereotype.Component;
 

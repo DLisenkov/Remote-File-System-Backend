@@ -1,4 +1,4 @@
-package com.project.dao;
+package com.project.dao.files;
 
 import com.project.models.File;
 import com.project.single.FilesStorage;

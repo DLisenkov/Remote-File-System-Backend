@@ -1,12 +1,8 @@
 package com.project.controllers;
 
-import com.project.dao.FilesDao;
-import com.project.models.File;
 import com.project.transfer.FileDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,10 +16,6 @@ public class FilesController {
 
     @Autowired
     private FilesService filesService;
-
-    @Autowired
-    @Qualifier("FilesDaoDatabase")
-    private FilesDao filesDao;
 
     @GetMapping(value = "/files/download-file/{user-id}")
     public Resource downloadFile(

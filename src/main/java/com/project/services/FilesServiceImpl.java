@@ -1,7 +1,7 @@
 package com.project.services;
 
-import com.project.dao.FilesDao;
-import com.project.dao.UsersDao;
+import com.project.dao.files.FilesDao;
+import com.project.dao.users.UsersDao;
 import com.project.models.File;
 import com.project.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;

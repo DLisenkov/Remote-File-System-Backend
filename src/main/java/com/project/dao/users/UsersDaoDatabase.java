@@ -1,4 +1,4 @@
-package com.project.dao;
+package com.project.dao.users;
 
 
 import com.project.models.User;
@@ -38,5 +38,10 @@ public class UsersDaoDatabase implements UsersDao {
     @Override
     public List<User> findAll() {
         return usersRepository.findAll();
+    }
+
+    @Override
+    public Optional<User> findOneByLogin(String login) {
+        return usersRepository.findOneByLogin(login);
     }
 }

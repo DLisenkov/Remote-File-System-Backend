@@ -1,25 +1,25 @@
-package com.project.dao;
+package com.project.dao.tokens;
 
-import com.project.models.User;
+import com.project.models.Token;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-@Component ("UsersDaoInFile")
-public class UsersDaoInFile implements UsersDao{
+@Component("TokensDaoInFile")
+public class TokensDaoInFile implements TokensDao{
     @Override
-    public Optional<User> find(int id) {
+    public Optional<Token> find(int id) {
         return Optional.empty();
     }
 
     @Override
-    public void save(User model) {
+    public void save(Token model) {
 
     }
 
     @Override
-    public void update(User model) {
+    public void update(Token model) {
 
     }
 
@@ -29,7 +29,7 @@ public class UsersDaoInFile implements UsersDao{
     }
 
     @Override
-    public List<User> findAll() {
+    public List<Token> findAll() {
         return null;
     }
 }

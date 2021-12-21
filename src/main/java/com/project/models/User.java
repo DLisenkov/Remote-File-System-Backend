@@ -32,4 +32,7 @@ public class User {
 
     @OneToMany(mappedBy = "file")
     private List<Permission> permissions;
+
+    @OneToMany(mappedBy = "user")
+    List<Token> tokens;
 }
