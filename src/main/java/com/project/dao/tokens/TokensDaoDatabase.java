@@ -38,4 +38,9 @@ public class TokensDaoDatabase implements TokensDao{
     public List<Token> findAll() {
         return tokensRepository.findAll();
     }
+
+    @Override
+    public Optional<Token> findOneByValue(String value) {
+        return tokensRepository.findOneByValue(value);
+    }
 }

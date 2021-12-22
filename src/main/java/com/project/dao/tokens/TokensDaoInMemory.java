@@ -42,4 +42,14 @@ public class TokensDaoInMemory implements TokensDao{
     public List<Token> findAll() {
         return TokensStorage.storage().tokens();
     }
+
+    @Override
+    public Optional<Token> findOneByValue(String value) {
+        for(Token token: TokensStorage.storage().tokens()) {
+            if (token.getValue().equals(value)) {
+                return Optional.of(token);
+            }
+        }
+        return Optional.empty();
+    }
 }

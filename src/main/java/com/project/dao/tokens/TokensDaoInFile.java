@@ -32,4 +32,9 @@ public class TokensDaoInFile implements TokensDao{
     public List<Token> findAll() {
         return null;
     }
+
+    @Override
+    public Optional<Token> findOneByValue(String value) {
+        return Optional.empty();
+    }
 }
