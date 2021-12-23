@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface FilesService {
 
-    public final String LOAD_PATH = "src/main/resources/files/";
+    String LOAD_PATH = "src/main/resources/files/";
 
-    public void uploadFile(int userId, MultipartFile file, String path) throws IOException;
-    public void uploadDirectory(int userId, String path, String name) throws IOException;
-    public Resource downloadFile(int userId, String path) throws IOException;
-    public List<File> downloadDirectory(int userId, String path) throws IOException;
+    void uploadFile(int userId, MultipartFile file, String path) throws IOException;
+    void uploadDirectory(int userId, String path, String name) throws IOException;
+    Resource downloadFile(int userId, String path) throws IOException;
+    List<File> downloadDirectory(int userId, String path) throws IOException;
 }

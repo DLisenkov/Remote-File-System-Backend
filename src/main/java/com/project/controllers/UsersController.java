@@ -1,8 +1,8 @@
 package com.project.controllers;
 
-import com.project.forms.LoginForm;
-import com.project.services.LoginService;
-import com.project.transfer.TokenDto;
+import com.project.forms.UserForm;
+import com.project.services.UsersService;
+import com.project.transfer.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class LoginController {
+public class UsersController {
 
     @Autowired
-    private LoginService loginService;
+    private UsersService usersService;
 
     @CrossOrigin(origins = "http://localhost:8080")
-    @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody LoginForm loginForm) {
-        return ResponseEntity.ok(loginService.login(loginForm));
+    @PostMapping("/registration")
+    public ResponseEntity<UserDto> addUser(@RequestBody UserForm userForm) {
+        return ResponseEntity.ok((usersService.addUser(userForm)));
     }
 }

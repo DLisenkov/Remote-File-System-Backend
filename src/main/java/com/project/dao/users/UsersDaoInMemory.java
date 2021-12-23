@@ -52,17 +52,4 @@ public class UsersDaoInMemory implements UsersDao {
         }
         return Optional.empty();
     }
-
-    /*
-    @Override
-    public List<User> findAllByFirstName(String firstName) {
-        List<User> users = new ArrayList<>();
-        for(User user: UsersStorage.storage().users()) {
-            if (user.getFirstName().equals(firstName)) {
-                users.add(user);
-            }
-        }
-        return users;
-    }
-    */
 }

@@ -2,7 +2,6 @@ package com.project.dao.users;
 
 import com.project.dao.CrudDao;
 import com.project.models.User;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
