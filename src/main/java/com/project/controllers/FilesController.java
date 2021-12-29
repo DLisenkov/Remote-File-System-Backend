@@ -1,11 +1,12 @@
 package com.project.controllers;
 
+import com.project.forms.DirectoryForm;
+import com.project.forms.FileForm;
+import com.project.transfer.DirectoryDto;
 import com.project.transfer.FileDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import com.project.services.FilesService;
 
 import java.io.IOException;
@@ -17,35 +18,29 @@ public class FilesController {
     @Autowired
     private FilesService filesService;
 
-    @GetMapping(value = "/files/download-file/{user-id}")
-    public Resource downloadFile(
-            @PathVariable("user-id") int userId,
+    @GetMapping(value = "/files/get-file-content")
+    public FileDto getFileContent(
             @RequestParam String path) throws IOException {
-        return filesService.downloadFile(userId, path);
+        return FileDto.from(filesService.getFileContent(path));
     }
 
-    @GetMapping(value = "/files/download-directory/{user-id}")
-    public List<FileDto> downloadDirectory(
-            @PathVariable("user-id") int userId,
+    @GetMapping(value = "/files/get-directory-content")
+    public List<DirectoryDto> getDirectoryContent(
             @RequestParam String path) throws IOException {
-        return FileDto.from(filesService.downloadDirectory(userId, path));
+        return DirectoryDto.from(filesService.getDirectoryContent(path));
     }
 
-    @PostMapping(value = "/files/upload-file/{user-id}")
-    public ResponseEntity<Object> uploadFile(
-            @PathVariable("user-id") int userId,
-            @RequestParam("file") MultipartFile file,
-            @RequestParam String path) throws IOException {
-        filesService.uploadFile(userId, file, path);
+    @PostMapping(value = "/files/add-file")
+    public ResponseEntity<Object> addFile(
+            @RequestBody FileForm fileForm) throws IOException {
+        filesService.addFile(fileForm);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/files/upload-directory/{user-id}")
-    public ResponseEntity<Object> createDirectory(
-            @RequestParam String path,
-            @RequestParam String name,
-            @PathVariable("user-id") int userId) throws IOException {
-        filesService.uploadDirectory(userId, path, name);
+    @PostMapping(value = "/files/add-directory")
+    public ResponseEntity<Object> addDirectory(
+            @RequestBody DirectoryForm directoryForm) throws IOException {
+        filesService.addDirectory(directoryForm);
         return ResponseEntity.ok().build();
     }
 }

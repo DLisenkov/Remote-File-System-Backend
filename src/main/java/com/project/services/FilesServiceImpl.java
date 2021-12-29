@@ -2,6 +2,8 @@ package com.project.services;
 
 import com.project.dao.files.FilesDao;
 import com.project.dao.users.UsersDao;
+import com.project.forms.DirectoryForm;
+import com.project.forms.FileForm;
 import com.project.models.File;
 import com.project.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 @Service
 public class FilesServiceImpl implements FilesService{
@@ -31,17 +36,18 @@ public class FilesServiceImpl implements FilesService{
     private FilesDao filesDao;
 
     @Override
-    public Resource downloadFile(int userId, String path) throws IOException{
-        Optional<User> userCandidate = usersDao.find(userId);
+    public File getFileContent(String path) throws IOException{
+        String login = path.split("/")[0];
+        Optional<User> userCandidate = usersDao.findOneByLogin(login);
         if (userCandidate.isPresent()) {
-            User user = userCandidate.get();
+            //User user = userCandidate.get();
 
-            Path absolutePath = Paths.get(LOAD_PATH + user.getLogin() + path);
-            Resource resource = new UrlResource(absolutePath.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
+            String absoluteParentPath = LOAD_PATH + path;
+            Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
+            if (fileCandidate.isPresent()) {
+                return fileCandidate.get();
             } else {
-                throw new IOException();
+                throw new IOException("File not found!");
             }
         } else {
             throw new IOException("User not found!");
@@ -49,12 +55,13 @@ public class FilesServiceImpl implements FilesService{
     }
 
     @Override
-    public List<File> downloadDirectory(int userId, String path) throws IOException {
-        Optional<User> userCandidate = usersDao.find(userId);
+    public List<File> getDirectoryContent(String path) throws IOException {
+        String login = path.split("/")[0];
+        Optional<User> userCandidate = usersDao.findOneByLogin(login);
         if (userCandidate.isPresent()) {
-            User user = userCandidate.get();
+            //User user = userCandidate.get();
 
-            String absoluteParentPath = LOAD_PATH + user.getLogin() + path.substring(0, path.length() - 1);
+            String absoluteParentPath = LOAD_PATH /*+ user.getLogin()*/ + path.substring(0, path.length() - 1);
             Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
             if (fileCandidate.isPresent()) {
                 return filesDao.findAllByParentFile(fileCandidate.get());
@@ -67,30 +74,29 @@ public class FilesServiceImpl implements FilesService{
     }
 
     @Override
-    public void uploadFile(int userId, MultipartFile multipartFile, String path) throws IOException {
-        Optional<User> userCandidate = usersDao.find(userId);
+    public void addFile(FileForm fileForm) throws IOException {
+        String login = fileForm.getPath().split("/")[0];
+        Optional<User> userCandidate = usersDao.findOneByLogin(login);
         if (userCandidate.isPresent()) {
             User user = userCandidate.get();
 
-            createPersonalDirectory(user);
-
-            String absolutePath = LOAD_PATH + user.getLogin() + path + multipartFile.getOriginalFilename();
+            String absolutePath = LOAD_PATH + fileForm.getPath() + fileForm.getName();
             java.io.File file = new java.io.File(absolutePath);
             if (!file.createNewFile()) {
                 throw new IOException("File not created!");
             }
             FileOutputStream stream = new FileOutputStream(file.toString());
-            stream.write(multipartFile.getBytes());
+            stream.write(fileForm.getContent().getBytes(StandardCharsets.UTF_8));
 
-            String absoluteParentPath = LOAD_PATH + user.getLogin() + path.substring(0, path.length() - 1);
+            String absoluteParentPath = LOAD_PATH + fileForm.getPath().substring(0, fileForm.getPath().length() - 1);
             Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
             if (fileCandidate.isPresent()) {
                 File parentFile = fileCandidate.get();
-                parentFile.setSize(parentFile.getSize() + multipartFile.getSize());
+                parentFile.setSize(parentFile.getSize() + fileForm.getContent().length());
 
                 File fileRecord = File.builder()
-                        .name(multipartFile.getOriginalFilename())
-                        .size(multipartFile.getSize())
+                        .name(fileForm.getName())
+                        .size(fileForm.getContent().length())
                         .creationDate(new Date())
                         .modificationDate(new Date())
                         .path(absolutePath)
@@ -107,26 +113,25 @@ public class FilesServiceImpl implements FilesService{
     }
 
     @Override
-    public void uploadDirectory(int userId, String path, String name) throws IOException {
-        Optional<User> userCandidate = usersDao.find(userId);
+    public void addDirectory(DirectoryForm directoryForm) throws IOException {
+        String login = directoryForm.getPath().split("/")[0];
+        Optional<User> userCandidate = usersDao.findOneByLogin(login);
         if (userCandidate.isPresent()) {
             User user = userCandidate.get();
 
-            createPersonalDirectory(user);
-
-            String absolutePath = LOAD_PATH + user.getLogin() + path + name;
+            String absolutePath = LOAD_PATH + directoryForm.getPath() + directoryForm.getName();
             java.io.File directory = new java.io.File(absolutePath);
             if (!directory.mkdir()) {
                 throw new IOException("Directory not created!");
             }
 
-            String absoluteParentPath = LOAD_PATH + user.getLogin() + path.substring(0, path.length() - 1);
+            String absoluteParentPath = LOAD_PATH + directoryForm.getPath().substring(0, directoryForm.getPath().length() - 1);
             Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
             if (fileCandidate.isPresent()) {
                 File parentFile = fileCandidate.get();
 
                 File fileRecord = File.builder()
-                        .name(name)
+                        .name(directoryForm.getName())
                         .size(0)
                         .creationDate(new Date())
                         .modificationDate(new Date())
@@ -143,21 +148,21 @@ public class FilesServiceImpl implements FilesService{
         }
     }
 
-    private void createPersonalDirectory(User user) throws IOException {
-        if (user.getFiles().isEmpty()) {
-            java.io.File personalDirectory = new java.io.File(LOAD_PATH + user.getLogin());
-            if (!personalDirectory.mkdir()) {
-                throw new IOException("Personal directory not created!");
-            }
-            File personalDirectoryRecord = File.builder()
-                    .name(user.getLogin())
-                    .size(0)
-                    .creationDate(new Date())
-                    .modificationDate(new Date())
-                    .path(LOAD_PATH + user.getLogin())
-                    .owner(user)
-                    .build();
-            filesDao.save(personalDirectoryRecord);
-        }
-    }
+//    private void createPersonalDirectory(User user) throws IOException {
+//        if (user.getFiles().isEmpty()) {
+//            java.io.File personalDirectory = new java.io.File(System.getenv("LOAD_PATH") + user.getLogin());
+//            if (!personalDirectory.mkdir()) {
+//                throw new IOException("Personal directory not created!");
+//            }
+//            File personalDirectoryRecord = File.builder()
+//                    .name(user.getLogin())
+//                    .size(0)
+//                    .creationDate(new Date())
+//                    .modificationDate(new Date())
+//                    .path(System.getenv("LOAD_PATH") + user.getLogin())
+//                    .owner(user)
+//                    .build();
+//            filesDao.save(personalDirectoryRecord);
+//        }
+//    }
 }

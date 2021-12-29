@@ -1,5 +1,7 @@
 package com.project.services;
 
+import com.project.forms.DirectoryForm;
+import com.project.forms.FileForm;
 import com.project.models.File;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,10 +11,10 @@ import java.util.List;
 
 public interface FilesService {
 
-    String LOAD_PATH = "src/main/resources/files/";
+    String LOAD_PATH = System.getenv("LOAD_PATH") + "\\";
 
-    void uploadFile(int userId, MultipartFile file, String path) throws IOException;
-    void uploadDirectory(int userId, String path, String name) throws IOException;
-    Resource downloadFile(int userId, String path) throws IOException;
-    List<File> downloadDirectory(int userId, String path) throws IOException;
+    void addFile(FileForm fileForm) throws IOException;
+    void addDirectory(DirectoryForm directoryForm) throws IOException;
+    File getFileContent(String path) throws IOException;
+    List<File> getDirectoryContent(String path) throws IOException;
 }

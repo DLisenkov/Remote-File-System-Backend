@@ -14,7 +14,7 @@ public class TokenAuthFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request =(HttpServletRequest)servletRequest;
 
-        String token = request.getParameter("token");
+        String token = request.getHeader("authorization");
         TokenAuthentication tokenAuthentication = new TokenAuthentication(token);
 
         if (token == null) {
@@ -24,6 +24,7 @@ public class TokenAuthFilter implements Filter {
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
-
+        //передавать токен в заголовке запроса
+        //удалять старые токены при создании нового этим пользователем
     }
 }

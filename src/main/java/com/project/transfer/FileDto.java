@@ -1,28 +1,28 @@
 package com.project.transfer;
 
 import com.project.models.File;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class FileDto {
-    private String name;
+    private String content;
 
-    public static FileDto from (File file) {
-        return FileDto.builder()
-                .name(file.getName())
-                .build();
-    }
+    public static FileDto from (File file) throws IOException {
 
-    public static List<FileDto> from (List<File> files) {
-        return files.stream().map(FileDto::from).collect(Collectors.toList());
+        FileReader fileReader = new FileReader(file.getPath());
+        Scanner scan = new Scanner(fileReader);
+        StringBuilder content = new StringBuilder();
+        while (scan.hasNextLine()) {
+            content.append(scan.nextLine());
+        }
+        fileReader.close();
+
+        return FileDto.builder().content(content.toString()).build();
     }
 }
