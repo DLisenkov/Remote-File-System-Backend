@@ -1,6 +1,7 @@
 package com.project.dao.tokens;
 
 import com.project.models.Token;
+import com.project.models.User;
 import com.project.single.TokensStorage;
 import org.springframework.stereotype.Component;
 
@@ -51,5 +52,10 @@ public class TokensDaoInMemory implements TokensDao{
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<Token> findAllByUser(User user) {
+        return null;
     }
 }

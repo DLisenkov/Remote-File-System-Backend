@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -35,6 +36,10 @@ public class LoginServiceImpl implements LoginService{
         if (userCandidate.isPresent()) {
             User user = userCandidate.get();
             if (passwordEncoder.matches(loginForm.getPassword(), user.getHashPassword())) {
+                List<Token> oldTokens = tokensDao.findAllByUser(user);
+                for (Token oldToken: oldTokens) {
+                    tokensDao.delete(oldToken.getId());
+                }
                 Token token = Token.builder()
                         .user(user)
                         .value(RandomStringUtils.random(10, true, true))

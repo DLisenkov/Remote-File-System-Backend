@@ -1,6 +1,7 @@
 package com.project.dao.tokens;
 
 import com.project.models.Token;
+import com.project.models.User;
 import com.project.repositories.TokensRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,5 +43,10 @@ public class TokensDaoDatabase implements TokensDao{
     @Override
     public Optional<Token> findOneByValue(String value) {
         return tokensRepository.findOneByValue(value);
+    }
+
+    @Override
+    public List<Token> findAllByUser(User user) {
+        return tokensRepository.findAllByUser(user);
     }
 }

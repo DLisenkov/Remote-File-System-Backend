@@ -2,74 +2,66 @@ package com.project.services;
 
 import com.project.dao.files.FilesDao;
 import com.project.dao.users.UsersDao;
+import com.project.forms.DeleteForm;
 import com.project.forms.DirectoryForm;
 import com.project.forms.FileForm;
 import com.project.models.File;
 import com.project.models.User;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 @Service
-public class FilesServiceImpl implements FilesService{
+public class FilesServiceImpl implements FilesService {
 
     @Autowired
-    @Qualifier ("UsersDaoDatabase")
+    @Qualifier("UsersDaoDatabase")
     private UsersDao usersDao;
 
     @Autowired
-    @Qualifier ("FilesDaoDatabase")
+    @Qualifier("FilesDaoDatabase")
     private FilesDao filesDao;
 
     @Override
-    public File getFileContent(String path) throws IOException{
+    public File getFileContent(String path) {
         String login = path.split("/")[0];
         Optional<User> userCandidate = usersDao.findOneByLogin(login);
         if (userCandidate.isPresent()) {
-            //User user = userCandidate.get();
 
             String absoluteParentPath = LOAD_PATH + path;
-            Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
-            if (fileCandidate.isPresent()) {
-                return fileCandidate.get();
+            Optional<File> parentFileCandidate = filesDao.findFileByPath(absoluteParentPath);
+            if (parentFileCandidate.isPresent()) {
+                return parentFileCandidate.get();
             } else {
-                throw new IOException("File not found!");
+                throw new IllegalArgumentException("Parent file not found!");
             }
         } else {
-            throw new IOException("User not found!");
+            throw new IllegalArgumentException("User not found!");
         }
     }
 
     @Override
-    public List<File> getDirectoryContent(String path) throws IOException {
+    public List<File> getDirectoryContent(String path) {
         String login = path.split("/")[0];
         Optional<User> userCandidate = usersDao.findOneByLogin(login);
         if (userCandidate.isPresent()) {
-            //User user = userCandidate.get();
 
-            String absoluteParentPath = LOAD_PATH /*+ user.getLogin()*/ + path.substring(0, path.length() - 1);
-            Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
-            if (fileCandidate.isPresent()) {
-                return filesDao.findAllByParentFile(fileCandidate.get());
+            String absoluteParentPath = LOAD_PATH + path.substring(0, path.length() - 1);
+            Optional<File> parentFileCandidate = filesDao.findFileByPath(absoluteParentPath);
+            if (parentFileCandidate.isPresent()) {
+                return filesDao.findAllByParentFile(parentFileCandidate.get());
             } else {
-                throw new IOException("File not found!");
+                throw new IllegalArgumentException("Parent file not found!");
             }
         } else {
-            throw new IOException("User not found!");
+            throw new IllegalArgumentException("User not found!");
         }
     }
 
@@ -81,17 +73,15 @@ public class FilesServiceImpl implements FilesService{
             User user = userCandidate.get();
 
             String absolutePath = LOAD_PATH + fileForm.getPath() + fileForm.getName();
-            java.io.File file = new java.io.File(absolutePath);
-            if (!file.createNewFile()) {
-                throw new IOException("File not created!");
-            }
-            FileOutputStream stream = new FileOutputStream(file.toString());
-            stream.write(fileForm.getContent().getBytes(StandardCharsets.UTF_8));
+
+            FileWriter fileWriter = new FileWriter(absolutePath);
+            fileWriter.write(fileForm.getContent());
+            fileWriter.close();
 
             String absoluteParentPath = LOAD_PATH + fileForm.getPath().substring(0, fileForm.getPath().length() - 1);
-            Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
-            if (fileCandidate.isPresent()) {
-                File parentFile = fileCandidate.get();
+            Optional<File> parentFileCandidate = filesDao.findFileByPath(absoluteParentPath);
+            if (parentFileCandidate.isPresent()) {
+                File parentFile = parentFileCandidate.get();
                 parentFile.setSize(parentFile.getSize() + fileForm.getContent().length());
 
                 File fileRecord = File.builder()
@@ -105,15 +95,95 @@ public class FilesServiceImpl implements FilesService{
                         .build();
                 filesDao.save(fileRecord);
             } else {
-                throw new IOException("Parent file not found");
+                throw new IllegalArgumentException("Parent file not found");
             }
         } else {
-            throw new IOException("User not found");
+            throw new IllegalArgumentException("User not found");
         }
     }
 
     @Override
-    public void addDirectory(DirectoryForm directoryForm) throws IOException {
+    public void editFile(FileForm fileForm) throws IOException {
+        String login = fileForm.getPath().split("/")[0];
+        Optional<User> userCandidate = usersDao.findOneByLogin(login);
+        if (userCandidate.isPresent()) {
+
+            String oldAbsolutePath = LOAD_PATH + fileForm.getPath();
+            String absolutePath = LOAD_PATH
+                    + fileForm.getPath().substring(0, fileForm.getPath().length() - fileForm.getPath().split("/")[fileForm.getPath().split("/").length - 1].length())
+                    + fileForm.getName();
+
+            Optional<File> fileCandidate = filesDao.findFileByPath(oldAbsolutePath);
+            if (fileCandidate.isPresent()) {
+                File fileRecord = fileCandidate.get();
+
+                String absoluteParentPath =
+                        absolutePath.substring(0, absolutePath.length() - fileForm.getName().length() - 1);
+                Optional<File> parentFileCandidate = filesDao.findFileByPath(absoluteParentPath);
+                if (parentFileCandidate.isPresent()) {
+                    File parentFile = parentFileCandidate.get();
+                    parentFile.setSize(parentFile.getSize() - fileRecord.getSize() + fileForm.getContent().length());
+                }
+
+                java.io.File file = new java.io.File(oldAbsolutePath);
+                if (!file.renameTo(new java.io.File(absolutePath))) {
+                    throw new IllegalArgumentException("File not renamed!");
+                }
+
+                FileWriter fileWriter = new FileWriter(absolutePath);
+                fileWriter.write(fileForm.getContent());
+                fileWriter.close();
+
+                fileRecord.setName(fileForm.getName());
+                fileRecord.setSize(fileForm.getContent().length());
+                fileRecord.setModificationDate(new Date());
+                fileRecord.setPath(absolutePath);
+                filesDao.update(fileRecord);
+            } else {
+                throw new IllegalArgumentException("Parent file not found");
+            }
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+    @Override
+    public void deleteFile(DeleteForm deleteForm) {
+        String path = deleteForm.getPath();
+        String login = path.split("/")[0];
+
+        Optional<User> userCandidate = usersDao.findOneByLogin(login);
+        if (userCandidate.isPresent()) {
+
+            String absolutePath = LOAD_PATH + path;
+            Optional<File> fileCandidate = filesDao.findFileByPath(absolutePath);
+            if (fileCandidate.isPresent()) {
+
+                java.io.File file = new java.io.File(absolutePath);
+                if (!file.delete()) {
+                    throw new IllegalArgumentException("File not deleted!");
+                }
+
+                File fileRecord = fileCandidate.get();
+                filesDao.delete(fileRecord.getId());
+
+                String absoluteParentPath = LOAD_PATH +
+                        path.substring(0, path.length() - path.split("/")[path.split("/").length - 1].length() - 1);
+                Optional<File> parentFileCandidate = filesDao.findFileByPath(absoluteParentPath);
+                if (parentFileCandidate.isPresent()) {
+                    File parentFile = parentFileCandidate.get();
+                    parentFile.setSize(parentFile.getSize() - fileRecord.getSize());
+                }
+            } else {
+                throw new IllegalArgumentException("Parent file not found");
+            }
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+    @Override
+    public void addDirectory(DirectoryForm directoryForm) {
         String login = directoryForm.getPath().split("/")[0];
         Optional<User> userCandidate = usersDao.findOneByLogin(login);
         if (userCandidate.isPresent()) {
@@ -122,13 +192,13 @@ public class FilesServiceImpl implements FilesService{
             String absolutePath = LOAD_PATH + directoryForm.getPath() + directoryForm.getName();
             java.io.File directory = new java.io.File(absolutePath);
             if (!directory.mkdir()) {
-                throw new IOException("Directory not created!");
+                throw new IllegalArgumentException("Directory not created!");
             }
 
             String absoluteParentPath = LOAD_PATH + directoryForm.getPath().substring(0, directoryForm.getPath().length() - 1);
-            Optional<File> fileCandidate = filesDao.findFileByPath(absoluteParentPath);
-            if (fileCandidate.isPresent()) {
-                File parentFile = fileCandidate.get();
+            Optional<File> parentFileCandidate = filesDao.findFileByPath(absoluteParentPath);
+            if (parentFileCandidate.isPresent()) {
+                File parentFile = parentFileCandidate.get();
 
                 File fileRecord = File.builder()
                         .name(directoryForm.getName())
@@ -141,28 +211,82 @@ public class FilesServiceImpl implements FilesService{
                         .build();
                 filesDao.save(fileRecord);
             } else {
-                throw new IOException("Parent file not found");
+                throw new IllegalArgumentException("Parent file not found");
             }
         } else {
-            throw new IOException("User not found");
+            throw new IllegalArgumentException("User not found");
         }
     }
 
-//    private void createPersonalDirectory(User user) throws IOException {
-//        if (user.getFiles().isEmpty()) {
-//            java.io.File personalDirectory = new java.io.File(System.getenv("LOAD_PATH") + user.getLogin());
-//            if (!personalDirectory.mkdir()) {
-//                throw new IOException("Personal directory not created!");
-//            }
-//            File personalDirectoryRecord = File.builder()
-//                    .name(user.getLogin())
-//                    .size(0)
-//                    .creationDate(new Date())
-//                    .modificationDate(new Date())
-//                    .path(System.getenv("LOAD_PATH") + user.getLogin())
-//                    .owner(user)
-//                    .build();
-//            filesDao.save(personalDirectoryRecord);
-//        }
-//    }
+    @Override
+    public void editDirectory(DirectoryForm directoryForm) {
+        String login = directoryForm.getPath().split("/")[0];
+        Optional<User> userCandidate = usersDao.findOneByLogin(login);
+        if (userCandidate.isPresent()) {
+
+            String oldAbsolutePath = LOAD_PATH + directoryForm.getPath().substring(0, directoryForm.getPath().length() - 1);
+            String absolutePath = LOAD_PATH
+                    + directoryForm.getPath().substring(0, directoryForm.getPath().length() - directoryForm.getPath().split("/")[directoryForm.getPath().split("/").length - 1].length() - 1)
+                    + directoryForm.getName();
+
+            Optional<File> fileCandidate = filesDao.findFileByPath(oldAbsolutePath);
+            if (fileCandidate.isPresent()) {
+
+                java.io.File file = new java.io.File(oldAbsolutePath);
+                if (!file.renameTo(new java.io.File(absolutePath))) {
+                    throw new IllegalArgumentException("File not renamed!");
+                }
+
+                File fileRecord = fileCandidate.get();
+
+                List<File> childFiles = filesDao.findAllByParentFile(fileRecord);
+                for(File childFile: childFiles) {
+                    childFile.setPath(absolutePath + "/" + childFile.getName());
+                    filesDao.update(childFile);
+                }
+
+                fileRecord.setName(directoryForm.getName());
+                fileRecord.setModificationDate(new Date());
+                fileRecord.setPath(absolutePath);
+                filesDao.update(fileRecord);
+
+            } else {
+                throw new IllegalArgumentException("Parent file not found");
+            }
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
+
+    @Override
+    public void deleteDirectory(DeleteForm deleteForm) throws IOException {
+        String path = deleteForm.getPath().substring(0, deleteForm.getPath().length() - 1);
+        String login = path.split("/")[0];
+
+        Optional<User> userCandidate = usersDao.findOneByLogin(login);
+        if (userCandidate.isPresent()) {
+
+            String absolutePath = LOAD_PATH + path;
+            Optional<File> fileCandidate = filesDao.findFileByPath(absolutePath);
+            if (fileCandidate.isPresent()) {
+
+                FileUtils.deleteDirectory(new java.io.File(absolutePath));
+
+                File fileRecord = fileCandidate.get();
+                filesDao.delete(fileRecord.getId());
+
+                String absoluteParentPath = LOAD_PATH +
+                        path.substring(0, path.length() - path.split("/")[path.split("/").length - 1].length() - 1);
+                Optional<File> parentFileCandidate = filesDao.findFileByPath(absoluteParentPath);
+                if (parentFileCandidate.isPresent()) {
+                    File parentFile = parentFileCandidate.get();
+                    parentFile.setSize(parentFile.getSize() - fileRecord.getSize());
+                }
+            } else {
+                throw new IllegalArgumentException("Parent file not found");
+            }
+        } else {
+            throw new IllegalArgumentException("User not found");
+        }
+    }
 }

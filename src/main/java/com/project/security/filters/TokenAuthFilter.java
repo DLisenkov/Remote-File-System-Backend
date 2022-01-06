@@ -24,7 +24,5 @@ public class TokenAuthFilter implements Filter {
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
-        //передавать токен в заголовке запроса
-        //удалять старые токены при создании нового этим пользователем
     }
 }

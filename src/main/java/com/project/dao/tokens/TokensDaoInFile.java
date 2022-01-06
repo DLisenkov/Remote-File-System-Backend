@@ -1,6 +1,7 @@
 package com.project.dao.tokens;
 
 import com.project.models.Token;
+import com.project.models.User;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -36,5 +37,10 @@ public class TokensDaoInFile implements TokensDao{
     @Override
     public Optional<Token> findOneByValue(String value) {
         return Optional.empty();
+    }
+
+    @Override
+    public List<Token> findAllByUser(User user) {
+        return null;
     }
 }
