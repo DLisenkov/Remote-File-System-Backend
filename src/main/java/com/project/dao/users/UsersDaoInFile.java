@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class for working with storage of users in a file that implements the {@link UsersDao} interface
+ */
 @Component ("UsersDaoInFile")
 public class UsersDaoInFile implements UsersDao{
     @Override

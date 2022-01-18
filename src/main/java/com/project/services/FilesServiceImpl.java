@@ -12,23 +12,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.processing.FilerException;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service implementing interface {@link FilesService}
+ */
 @Service
 public class FilesServiceImpl implements FilesService {
 
+    /**
+     * Field for accessing users DAO methods
+     * @see UsersDao
+     */
     @Autowired
     @Qualifier("UsersDaoDatabase")
     private UsersDao usersDao;
 
+    /**
+     * Field for accessing files DAO methods
+     * @see FilesDao
+     */
     @Autowired
     @Qualifier("FilesDaoDatabase")
     private FilesDao filesDao;
 
+    /**
+     * Implements the method {@link FilesService#getFileContent(String)}
+     * @param path the path to the file
+     * @return file as {@link File}
+     * @see UsersDao#findOneByLogin(String) 
+     */
     @Override
     public File getFileContent(String path) {
         String login = path.split("/")[0];
@@ -47,6 +66,13 @@ public class FilesServiceImpl implements FilesService {
         }
     }
 
+    /**
+     * Implements the method {@link FilesService#getDirectoryContent(String)}
+     * @param path the path to the file
+     * @return list of files as {@link List}
+     * @see UsersDao#findOneByLogin(String)
+     * @see FilesDao#findAllByParentFile(File)
+     */
     @Override
     public List<File> getDirectoryContent(String path) {
         String login = path.split("/")[0];
@@ -65,6 +91,14 @@ public class FilesServiceImpl implements FilesService {
         }
     }
 
+    /**
+     * Implements the method {@link FilesService#addFile(FileForm)}
+     * @param fileForm form like {@link FileForm}
+     * @throws IOException if failed to write to file
+     * @see UsersDao#findOneByLogin(String)
+     * @see FilesDao#findFileByPath(String)
+     * @see FilesDao#save(Object)
+     */
     @Override
     public void addFile(FileForm fileForm) throws IOException {
         String login = fileForm.getPath().split("/")[0];
@@ -95,13 +129,21 @@ public class FilesServiceImpl implements FilesService {
                         .build();
                 filesDao.save(fileRecord);
             } else {
-                throw new IllegalArgumentException("Parent file not found");
+                throw new IllegalArgumentException("Parent file not found!");
             }
         } else {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException("User not found!");
         }
     }
 
+    /**
+     * Implements the method {@link FilesService#editFile(FileForm)}
+     * @param fileForm form like {@link FileForm}
+     * @throws IOException if failed to write to file
+     * @see UsersDao#findOneByLogin(String)
+     * @see FilesDao#findFileByPath(String)
+     * @see FilesDao#update(Object)
+     */
     @Override
     public void editFile(FileForm fileForm) throws IOException {
         String login = fileForm.getPath().split("/")[0];
@@ -140,16 +182,23 @@ public class FilesServiceImpl implements FilesService {
                 fileRecord.setPath(absolutePath);
                 filesDao.update(fileRecord);
             } else {
-                throw new IllegalArgumentException("Parent file not found");
+                throw new IllegalArgumentException("Parent file not found!");
             }
         } else {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException("User not found!");
         }
     }
 
+    /**
+     * Implements the method {@link FilesService#deleteFile(DeleteForm)}
+     * @param deleteFileForm form like {@link DeleteForm}
+     * @see UsersDao#findOneByLogin(String)
+     * @see FilesDao#findFileByPath(String)
+     * @see FilesDao#delete(int)
+     */
     @Override
-    public void deleteFile(DeleteForm deleteForm) {
-        String path = deleteForm.getPath();
+    public void deleteFile(DeleteForm deleteFileForm) {
+        String path = deleteFileForm.getPath();
         String login = path.split("/")[0];
 
         Optional<User> userCandidate = usersDao.findOneByLogin(login);
@@ -175,13 +224,20 @@ public class FilesServiceImpl implements FilesService {
                     parentFile.setSize(parentFile.getSize() - fileRecord.getSize());
                 }
             } else {
-                throw new IllegalArgumentException("Parent file not found");
+                throw new IllegalArgumentException("Parent file not found!");
             }
         } else {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException("User not found!");
         }
     }
 
+    /**
+     * Implements the method {@link FilesService#addDirectory(DirectoryForm)}
+     * @param directoryForm form like {@link DirectoryForm}
+     * @see UsersDao#findOneByLogin(String)
+     * @see FilesDao#findFileByPath(String)
+     * @see FilesDao#save(Object)
+     */
     @Override
     public void addDirectory(DirectoryForm directoryForm) {
         String login = directoryForm.getPath().split("/")[0];
@@ -211,13 +267,20 @@ public class FilesServiceImpl implements FilesService {
                         .build();
                 filesDao.save(fileRecord);
             } else {
-                throw new IllegalArgumentException("Parent file not found");
+                throw new IllegalArgumentException("Parent file not found!");
             }
         } else {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException("User not found!");
         }
     }
 
+    /**
+     * Implements the method {@link FilesService#editDirectory(DirectoryForm)}
+     * @param directoryForm form like {@link DirectoryForm}
+     * @see UsersDao#findOneByLogin(String)
+     * @see FilesDao#findFileByPath(String)
+     * @see FilesDao#update(Object)
+     */
     @Override
     public void editDirectory(DirectoryForm directoryForm) {
         String login = directoryForm.getPath().split("/")[0];
@@ -251,13 +314,21 @@ public class FilesServiceImpl implements FilesService {
                 filesDao.update(fileRecord);
 
             } else {
-                throw new IllegalArgumentException("Parent file not found");
+                throw new IllegalArgumentException("Parent file not found!");
             }
         } else {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException("User not found!");
         }
     }
 
+    /**
+     * Implements the method {@link FilesService#deleteDirectory(DeleteForm)}
+     * @param deleteForm form like {@link DeleteForm}
+     * @throws IOException if it was not possible to delete the directory
+     * @see UsersDao#findOneByLogin(String)
+     * @see FilesDao#findFileByPath(String) 
+     * @see FilesDao#delete(int) 
+     */
     @Override
     public void deleteDirectory(DeleteForm deleteForm) throws IOException {
         String path = deleteForm.getPath().substring(0, deleteForm.getPath().length() - 1);
@@ -283,10 +354,10 @@ public class FilesServiceImpl implements FilesService {
                     parentFile.setSize(parentFile.getSize() - fileRecord.getSize());
                 }
             } else {
-                throw new IllegalArgumentException("Parent file not found");
+                throw new IllegalArgumentException("Parent file not found!");
             }
         } else {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException("User not found!");
         }
     }
 }

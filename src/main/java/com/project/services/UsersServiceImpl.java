@@ -15,20 +15,44 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.Optional;
 
+/**
+ * Service implementing interface {@link UsersService}
+ */
 @Service
 public class UsersServiceImpl implements UsersService{
 
+    /**
+     * Field for accessing users DAO methods
+     * @see UsersDao
+     */
     @Autowired
     @Qualifier("UsersDaoDatabase")
     private UsersDao usersDao;
 
+    /**
+     * Field for accessing tokens DAO methods
+     * @see com.project.dao.tokens.TokensDao
+     */
     @Autowired
     @Qualifier("FilesDaoDatabase")
     private FilesDao filesDao;
 
+    /**
+     * Field for accessing password encoder methods
+     * @see PasswordEncoder
+     */
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Implements the method {@link UsersService#addUser(UserForm)}
+     * @param userForm form like {@link UserForm}
+     * @return user dto like {@link UserDto}
+     * @see UsersDao#findOneByLogin(String)
+     * @see PasswordEncoder#encode(CharSequence) 
+     * @see UsersDao#save(Object) 
+     * @see FilesDao#save(Object) 
+     */
     @Override
     public UserDto addUser(UserForm userForm) {
 
@@ -60,6 +84,6 @@ public class UsersServiceImpl implements UsersService{
                     .build();
             filesDao.save(personalDirectoryRecord);
             return UserDto.from(user);
-        } throw new IllegalArgumentException("Login already exists");
+        } throw new IllegalArgumentException("Login already exists!");
     }
 }

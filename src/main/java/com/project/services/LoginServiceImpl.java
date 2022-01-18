@@ -15,20 +15,44 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service implementing interface {@link LoginService}
+ */
 @Service
 public class LoginServiceImpl implements LoginService{
 
+    /**
+     * Field for accessing users DAO methods
+     * @see UsersDao
+     */
     @Autowired
     @Qualifier("UsersDaoDatabase")
     private UsersDao usersDao;
 
+    /**
+     * Field for accessing tokens DAO methods
+     * @see TokensDao
+     */
     @Autowired
     @Qualifier("TokensDaoDatabase")
     private TokensDao tokensDao;
 
+    /**
+     * Field for accessing password encoder methods
+     * @see PasswordEncoder
+     */
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Implements the method {@link LoginService#login(LoginForm)} 
+     * @param loginForm form like {@link LoginForm}
+     * @return token DTO like {@link TokenDto}
+     * @see UsersDao#findOneByLogin(String) 
+     * @see PasswordEncoder#matches(CharSequence, String) 
+     * @see TokensDao#delete(int) 
+     * @see TokensDao#save(Object) 
+     */
     @Override
     public TokenDto login(LoginForm loginForm) {
         Optional<User> userCandidate = usersDao.findOneByLogin(loginForm.getLogin());
@@ -47,6 +71,6 @@ public class LoginServiceImpl implements LoginService{
                 tokensDao.save(token);
                 return TokenDto.from(token);
             }
-        } throw new IllegalArgumentException("User not found");
+        } throw new IllegalArgumentException("User not found!");
     }
 }

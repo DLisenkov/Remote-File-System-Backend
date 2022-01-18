@@ -8,11 +8,24 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * File data transfer object
+ */
 @Data
 @Builder
 public class FileDto {
+
+    /**
+     * File content
+     */
     private String content;
 
+    /**
+     * Method for getting file DTO by file
+     * @param file file
+     * @return file DTO like {@link FileDto}
+     * @throws IOException if the contents of the file could not be read
+     */
     public static FileDto from (File file) throws IOException {
 
         FileReader fileReader = new FileReader(file.getPath());

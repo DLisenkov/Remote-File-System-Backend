@@ -8,9 +8,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Class for setting the parameters of the cors request extends {@link OncePerRequestFilter}
+ */
 @Component
 public class CorsFilter extends OncePerRequestFilter {
 
+    /**
+     * Method sets the permission for complex queries
+     * @param request request data
+     * @param response response data
+     * @param filterChain filter chain for passing data to the next filter
+     * @throws ServletException if an error occurred while passing to the next filter
+     * @throws IOException if an error occurred while passing to the next filter
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");

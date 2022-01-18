@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class for working with storage of tokens in a file that implements the {@link TokensDao} interface
+ */
 @Component("TokensDaoInFile")
 public class TokensDaoInFile implements TokensDao{
     @Override
