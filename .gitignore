@@ -2,3 +2,6 @@
 .idea
 target/
 *.iml
+
+# Local files #
+**/resources/files/
