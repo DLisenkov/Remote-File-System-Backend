@@ -18,6 +18,7 @@ public class TokenDto {
 
     /**
      * Method for getting token DTO by token
+     *
      * @param token token
      * @return token DTO like {@link TokenDto}
      */

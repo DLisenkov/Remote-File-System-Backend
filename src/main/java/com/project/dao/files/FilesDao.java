@@ -8,11 +8,13 @@ import java.util.Optional;
 
 /**
  * Interface describes methods for working with files in the storage
+ *
  * @see CrudDao
  */
 public interface FilesDao extends CrudDao<File> {
     /**
      * Method finds a file in a specific path
+     *
      * @param path the path to the file
      * @return an object of type {@link Optional} for {@link File}
      */
@@ -20,6 +22,7 @@ public interface FilesDao extends CrudDao<File> {
 
     /**
      * Method finds all files by parent file
+     *
      * @param parentFile parent file
      * @return file list as {@link List}
      */

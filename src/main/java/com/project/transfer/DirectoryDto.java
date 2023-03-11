@@ -25,10 +25,11 @@ public class DirectoryDto {
 
     /**
      * Method for getting directory DTO by file
+     *
      * @param file file
      * @return directory dto like {@link DirectoryDto}
      */
-    public static DirectoryDto from (File file) {
+    public static DirectoryDto from(File file) {
         return DirectoryDto.builder()
                 .name(file.getName())
                 .build();
@@ -36,10 +37,11 @@ public class DirectoryDto {
 
     /**
      * Method for getting DTO directory list by file list
+     *
      * @param files list of files
      * @return DTO directory list like {@link List}
      */
-    public static List<DirectoryDto> from (List<File> files) {
+    public static List<DirectoryDto> from(List<File> files) {
         return files.stream().map(DirectoryDto::from).collect(Collectors.toList());
     }
 }

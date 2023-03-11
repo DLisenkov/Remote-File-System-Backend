@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.processing.FilerException;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
@@ -28,6 +26,7 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * Field for accessing users DAO methods
+     *
      * @see UsersDao
      */
     @Autowired
@@ -36,6 +35,7 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * Field for accessing files DAO methods
+     *
      * @see FilesDao
      */
     @Autowired
@@ -44,9 +44,10 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * Implements the method {@link FilesService#getFileContent(String)}
+     *
      * @param path the path to the file
      * @return file as {@link File}
-     * @see UsersDao#findOneByLogin(String) 
+     * @see UsersDao#findOneByLogin(String)
      */
     @Override
     public File getFileContent(String path) {
@@ -68,6 +69,7 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * Implements the method {@link FilesService#getDirectoryContent(String)}
+     *
      * @param path the path to the file
      * @return list of files as {@link List}
      * @see UsersDao#findOneByLogin(String)
@@ -93,6 +95,7 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * Implements the method {@link FilesService#addFile(FileForm)}
+     *
      * @param fileForm form like {@link FileForm}
      * @throws IOException if failed to write to file
      * @see UsersDao#findOneByLogin(String)
@@ -138,6 +141,7 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * Implements the method {@link FilesService#editFile(FileForm)}
+     *
      * @param fileForm form like {@link FileForm}
      * @throws IOException if failed to write to file
      * @see UsersDao#findOneByLogin(String)
@@ -191,6 +195,7 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * Implements the method {@link FilesService#deleteFile(DeleteForm)}
+     *
      * @param deleteFileForm form like {@link DeleteForm}
      * @see UsersDao#findOneByLogin(String)
      * @see FilesDao#findFileByPath(String)
@@ -233,6 +238,7 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * Implements the method {@link FilesService#addDirectory(DirectoryForm)}
+     *
      * @param directoryForm form like {@link DirectoryForm}
      * @see UsersDao#findOneByLogin(String)
      * @see FilesDao#findFileByPath(String)
@@ -276,6 +282,7 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * Implements the method {@link FilesService#editDirectory(DirectoryForm)}
+     *
      * @param directoryForm form like {@link DirectoryForm}
      * @see UsersDao#findOneByLogin(String)
      * @see FilesDao#findFileByPath(String)
@@ -303,7 +310,7 @@ public class FilesServiceImpl implements FilesService {
                 File fileRecord = fileCandidate.get();
 
                 List<File> childFiles = filesDao.findAllByParentFile(fileRecord);
-                for(File childFile: childFiles) {
+                for (File childFile : childFiles) {
                     childFile.setPath(absolutePath + "/" + childFile.getName());
                     filesDao.update(childFile);
                 }
@@ -323,11 +330,12 @@ public class FilesServiceImpl implements FilesService {
 
     /**
      * Implements the method {@link FilesService#deleteDirectory(DeleteForm)}
+     *
      * @param deleteForm form like {@link DeleteForm}
      * @throws IOException if it was not possible to delete the directory
      * @see UsersDao#findOneByLogin(String)
-     * @see FilesDao#findFileByPath(String) 
-     * @see FilesDao#delete(int) 
+     * @see FilesDao#findFileByPath(String)
+     * @see FilesDao#delete(int)
      */
     @Override
     public void deleteDirectory(DeleteForm deleteForm) throws IOException {

@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface FilesRepository extends JpaRepository<File, Integer> {
     /**
      * Method finds a file in a specific path
+     *
      * @param path the path to the file
      * @return an object of type {@link Optional} for {@link File}
      */
@@ -19,6 +20,7 @@ public interface FilesRepository extends JpaRepository<File, Integer> {
 
     /**
      * Method finds all files by parent file
+     *
      * @param parentFile parent file
      * @return file list as {@link List}
      */

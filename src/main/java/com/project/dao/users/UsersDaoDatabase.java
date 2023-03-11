@@ -12,11 +12,12 @@ import java.util.Optional;
 /**
  * Class for working with a user database that implements the {@link UsersDao} interface
  */
-@Component ("UsersDaoDatabase")
+@Component("UsersDaoDatabase")
 public class UsersDaoDatabase implements UsersDao {
 
     /**
      * Field for accessing users repository methods
+     *
      * @see UsersRepository
      */
     @Autowired
@@ -24,6 +25,7 @@ public class UsersDaoDatabase implements UsersDao {
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#find(int)}
+     *
      * @param id unique identificator
      * @return an object of type {@link Optional} for {@link User}
      * @see UsersRepository#findById(Object)
@@ -35,6 +37,7 @@ public class UsersDaoDatabase implements UsersDao {
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#save(Object)}
+     *
      * @param model data to save
      * @see UsersRepository#save(Object)
      */
@@ -45,6 +48,7 @@ public class UsersDaoDatabase implements UsersDao {
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#update(Object)}
+     *
      * @param model data to update
      * @see UsersRepository#save(Object)
      */
@@ -55,6 +59,7 @@ public class UsersDaoDatabase implements UsersDao {
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#delete(int)}
+     *
      * @param id unique identificator
      * @see UsersRepository#deleteById(Object)
      */
@@ -65,6 +70,7 @@ public class UsersDaoDatabase implements UsersDao {
 
     /**
      * Implements the method {@link CrudDao#findAll()}
+     *
      * @return token list as {@link List}
      * @see UsersRepository#findAll()
      */
@@ -75,6 +81,7 @@ public class UsersDaoDatabase implements UsersDao {
 
     /**
      * Implements the method {@link UsersDao#findOneByLogin(String)}
+     *
      * @param login user login
      * @return an object of type {@link Optional} for {@link User}
      */

@@ -57,7 +57,7 @@ public class File {
      * Unique parent id associated with the entity {@link File}
      */
     @OneToOne
-    @JoinColumn(name="parent_id")
+    @JoinColumn(name = "parent_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private File parentFile;
 
@@ -65,7 +65,7 @@ public class File {
      * Unique user id associated with the entity {@link User}
      */
     @ManyToOne
-    @JoinColumn (name="owner_id")
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     /**

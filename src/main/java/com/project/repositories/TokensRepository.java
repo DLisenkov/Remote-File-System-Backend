@@ -14,6 +14,7 @@ public interface TokensRepository extends JpaRepository<Token, Integer> {
 
     /**
      * Method finds token by value
+     *
      * @param value token value
      * @return an object of type {@link Optional} for {@link Token}
      */
@@ -21,6 +22,7 @@ public interface TokensRepository extends JpaRepository<Token, Integer> {
 
     /**
      * Method finds all tokens by user
+     *
      * @param user token owner
      * @return token list as {@link List}
      */

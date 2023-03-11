@@ -23,12 +23,14 @@ public class TokenAuthentication implements Authentication {
 
     /**
      * User details
+     *
      * @see UserDetails
      */
     private UserDetails userDetails;
 
     /**
      * Constructor - creating a new object with specific values
+     *
      * @param token token value
      * @see TokenAuthentication#token
      */
@@ -38,6 +40,7 @@ public class TokenAuthentication implements Authentication {
 
     /**
      * Setting user details
+     *
      * @param userDetails user details
      * @see TokenAuthentication#userDetails
      */
@@ -47,6 +50,7 @@ public class TokenAuthentication implements Authentication {
 
     /**
      * Getting user authorization
+     *
      * @return authorization
      */
     @Override
@@ -61,6 +65,7 @@ public class TokenAuthentication implements Authentication {
 
     /**
      * Getting user details
+     *
      * @return user details
      * @see TokenAuthentication#userDetails
      */
@@ -76,6 +81,7 @@ public class TokenAuthentication implements Authentication {
 
     /**
      * Getting the authorization flag
+     *
      * @return authorization flag
      * @see TokenAuthentication#isAuthenticated()
      */
@@ -86,16 +92,18 @@ public class TokenAuthentication implements Authentication {
 
     /**
      * Setting the authorization flag
+     *
      * @param isAuthenticated authorization flag
      * @see TokenAuthentication#isAuthenticated()
      */
     @Override
     public void setAuthenticated(boolean isAuthenticated) {
-        this.isAuthenticated  = isAuthenticated;
+        this.isAuthenticated = isAuthenticated;
     }
 
     /**
      * Getting token value
+     *
      * @return token value
      * @see TokenAuthentication#token
      */

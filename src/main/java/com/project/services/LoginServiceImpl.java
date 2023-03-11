@@ -19,10 +19,11 @@ import java.util.Optional;
  * Service implementing interface {@link LoginService}
  */
 @Service
-public class LoginServiceImpl implements LoginService{
+public class LoginServiceImpl implements LoginService {
 
     /**
      * Field for accessing users DAO methods
+     *
      * @see UsersDao
      */
     @Autowired
@@ -31,6 +32,7 @@ public class LoginServiceImpl implements LoginService{
 
     /**
      * Field for accessing tokens DAO methods
+     *
      * @see TokensDao
      */
     @Autowired
@@ -39,19 +41,21 @@ public class LoginServiceImpl implements LoginService{
 
     /**
      * Field for accessing password encoder methods
+     *
      * @see PasswordEncoder
      */
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     /**
-     * Implements the method {@link LoginService#login(LoginForm)} 
+     * Implements the method {@link LoginService#login(LoginForm)}
+     *
      * @param loginForm form like {@link LoginForm}
      * @return token DTO like {@link TokenDto}
-     * @see UsersDao#findOneByLogin(String) 
-     * @see PasswordEncoder#matches(CharSequence, String) 
-     * @see TokensDao#delete(int) 
-     * @see TokensDao#save(Object) 
+     * @see UsersDao#findOneByLogin(String)
+     * @see PasswordEncoder#matches(CharSequence, String)
+     * @see TokensDao#delete(int)
+     * @see TokensDao#save(Object)
      */
     @Override
     public TokenDto login(LoginForm loginForm) {
@@ -61,7 +65,7 @@ public class LoginServiceImpl implements LoginService{
             User user = userCandidate.get();
             if (passwordEncoder.matches(loginForm.getPassword(), user.getHashPassword())) {
                 List<Token> oldTokens = tokensDao.findAllByUser(user);
-                for (Token oldToken: oldTokens) {
+                for (Token oldToken : oldTokens) {
                     tokensDao.delete(oldToken.getId());
                 }
                 Token token = Token.builder()
@@ -71,6 +75,7 @@ public class LoginServiceImpl implements LoginService{
                 tokensDao.save(token);
                 return TokenDto.from(token);
             }
-        } throw new IllegalArgumentException("User not found!");
+        }
+        throw new IllegalArgumentException("User not found!");
     }
 }

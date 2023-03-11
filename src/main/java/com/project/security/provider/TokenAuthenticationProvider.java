@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -22,6 +21,7 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
 
     /**
      * Field for accessing tokens DAO methods
+     *
      * @see TokensDao
      */
     @Autowired
@@ -30,6 +30,7 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
 
     /**
      * Field for accessing user details service methods
+     *
      * @see UserDetailsService
      */
     @Autowired
@@ -37,6 +38,7 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
 
     /**
      * Method checks the validity of the token and sets up the authentication
+     *
      * @param authentication authentication object
      * @return token authentication object
      * @throws IllegalArgumentException if the token is not valid
@@ -49,7 +51,7 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
         Optional<Token> tokenCandidate = tokensDao.findOneByValue(tokenAuthentication.getName());
 
         if (tokenCandidate.isPresent()) {
-            UserDetails userDetails =  userDetailsService.loadUserByUsername(tokenCandidate.get().getUser().getLogin());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(tokenCandidate.get().getUser().getLogin());
             tokenAuthentication.setUserDetails(userDetails);
             tokenAuthentication.setAuthenticated(true);
             return tokenAuthentication;

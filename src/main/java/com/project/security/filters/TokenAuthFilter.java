@@ -16,15 +16,16 @@ public class TokenAuthFilter implements Filter {
 
     /**
      * Method gets the token from the request and creates authentication {@link TokenAuthentication}
-     * @param servletRequest request data
+     *
+     * @param servletRequest  request data
      * @param servletResponse response data
-     * @param filterChain filter chain for passing data to the next filter
-     * @throws IOException if an error occurred while passing to the next filter
+     * @param filterChain     filter chain for passing data to the next filter
+     * @throws IOException      if an error occurred while passing to the next filter
      * @throws ServletException if an error occurred while passing to the next filter
      */
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest)servletRequest;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
 
         String token = request.getHeader("authorization");
         TokenAuthentication tokenAuthentication = new TokenAuthentication(token);

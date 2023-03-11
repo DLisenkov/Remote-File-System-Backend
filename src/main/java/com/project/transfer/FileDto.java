@@ -22,11 +22,12 @@ public class FileDto {
 
     /**
      * Method for getting file DTO by file
+     *
      * @param file file
      * @return file DTO like {@link FileDto}
      * @throws IOException if the contents of the file could not be read
      */
-    public static FileDto from (File file) throws IOException {
+    public static FileDto from(File file) throws IOException {
 
         FileReader fileReader = new FileReader(file.getPath());
         Scanner scan = new Scanner(fileReader);

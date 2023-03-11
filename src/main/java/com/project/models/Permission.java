@@ -29,13 +29,13 @@ public class Permission {
      * Unique file id associated with the entity {@link File}
      */
     @ManyToOne
-    @JoinColumn(name="file_id")
+    @JoinColumn(name = "file_id")
     private File file;
 
     /**
      * Unique user id associated with the entity {@link User}
      */
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 }

@@ -21,12 +21,14 @@ public class UsersStorage {
 
     /**
      * List of users
+     *
      * @see List
      */
     private List<User> users;
 
     /**
      * Parameterless constructor creates a list of users
+     *
      * @see ArrayList
      */
     private UsersStorage() {
@@ -35,6 +37,7 @@ public class UsersStorage {
 
     /**
      * Static method for getting storage
+     *
      * @return storage
      * @see UsersStorage#storage
      */
@@ -44,6 +47,7 @@ public class UsersStorage {
 
     /**
      * Method of getting users from storage
+     *
      * @return users
      * @see UsersStorage#users
      */

@@ -23,6 +23,7 @@ public class LoginController {
 
     /**
      * Method of handling the request for login
+     *
      * @param loginForm form like {@link LoginForm}
      * @return successful execution of a request with a response body in the form of a token DTO from {@link TokenDto}
      * @see LoginService#login(LoginForm)

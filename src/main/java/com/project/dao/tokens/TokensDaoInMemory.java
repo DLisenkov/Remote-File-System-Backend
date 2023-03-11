@@ -11,19 +11,21 @@ import java.util.Optional;
 
 /**
  * Class for working with storage of tokens in memory that implements the {@link TokensDao} interface
+ *
  * @see TokensStorage
  */
 @Component("TokensDaoInMemory")
-public class TokensDaoInMemory implements TokensDao{
+public class TokensDaoInMemory implements TokensDao {
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#find(int)}
+     *
      * @param id unique identificator
      * @return an object of type {@link Optional} for {@link Token}
      */
     @Override
     public Optional<Token> find(int id) {
-        for(Token token: TokensStorage.storage().tokens()) {
+        for (Token token : TokensStorage.storage().tokens()) {
             if (token.getId() == id) {
                 return Optional.of(token);
             }
@@ -33,6 +35,7 @@ public class TokensDaoInMemory implements TokensDao{
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#save(Object)}
+     *
      * @param model data to save
      */
     @Override
@@ -42,11 +45,12 @@ public class TokensDaoInMemory implements TokensDao{
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#update(Object)}
+     *
      * @param model data to update
      */
     @Override
     public void update(Token model) {
-        for(Token token: TokensStorage.storage().tokens()) {
+        for (Token token : TokensStorage.storage().tokens()) {
             if (token.getId() == model.getId()) {
                 TokensStorage.storage().tokens().set(token.getId(), model);
             }
@@ -55,6 +59,7 @@ public class TokensDaoInMemory implements TokensDao{
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#delete(int)}
+     *
      * @param id unique identificator
      */
     @Override
@@ -64,6 +69,7 @@ public class TokensDaoInMemory implements TokensDao{
 
     /**
      * Implements the method {@link CrudDao#findAll()}
+     *
      * @return token list as {@link List}
      */
     @Override
@@ -73,12 +79,13 @@ public class TokensDaoInMemory implements TokensDao{
 
     /**
      * Implements the method {@link TokensDao#findOneByValue(String)}
+     *
      * @param value token value
      * @return an object of type {@link Optional} for {@link Token}
      */
     @Override
     public Optional<Token> findOneByValue(String value) {
-        for(Token token: TokensStorage.storage().tokens()) {
+        for (Token token : TokensStorage.storage().tokens()) {
             if (token.getValue().equals(value)) {
                 return Optional.of(token);
             }
@@ -88,6 +95,7 @@ public class TokensDaoInMemory implements TokensDao{
 
     /**
      * Implements the method {@link TokensDao#findAllByUser(User)}
+     *
      * @param user token owner
      * @return token list as {@link List}
      */

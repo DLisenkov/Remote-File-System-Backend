@@ -21,12 +21,14 @@ public class TokensStorage {
 
     /**
      * List of tokens
+     *
      * @see List
      */
     private List<Token> tokens;
 
     /**
      * Parameterless constructor creates a list of tokens
+     *
      * @see ArrayList
      */
     private TokensStorage() {
@@ -35,6 +37,7 @@ public class TokensStorage {
 
     /**
      * Static method for getting storage
+     *
      * @return storage
      * @see TokensStorage#storage
      */
@@ -44,6 +47,7 @@ public class TokensStorage {
 
     /**
      * Method of getting tokens from storage
+     *
      * @return tokens
      * @see TokensStorage#tokens
      */

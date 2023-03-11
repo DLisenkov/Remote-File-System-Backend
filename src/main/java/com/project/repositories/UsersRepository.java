@@ -8,9 +8,10 @@ import java.util.Optional;
 /**
  * Users repository interface extends {@link JpaRepository} interface uses hibernate to work with user database
  */
-public interface UsersRepository  extends JpaRepository<User, Integer> {
+public interface UsersRepository extends JpaRepository<User, Integer> {
     /**
      * Method finds the user by login
+     *
      * @param login user login
      * @return an object of type {@link Optional} for {@link User}
      */

@@ -14,12 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Class for running a spring boot application
  */
 @ComponentScan(basePackages = "com.project")
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class})
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @EnableJpaRepositories(basePackages = "com.project.repositories")
 @EntityScan(basePackages = "com.project.models")
 public class Application {
     /**
      * The main method serving as the starting point of the application
+     *
      * @param args command line arguments
      */
     public static void main(String[] args) {
@@ -28,6 +29,7 @@ public class Application {
 
     /**
      * Method for getting the password encoder based on the bcrypt algorithm
+     *
      * @return bcrypt password encoder
      */
     @Bean

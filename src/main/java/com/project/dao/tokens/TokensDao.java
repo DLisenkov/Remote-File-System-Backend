@@ -9,11 +9,13 @@ import java.util.Optional;
 
 /**
  * Interface describes methods for working with tokens in the storage
+ *
  * @see CrudDao
  */
 public interface TokensDao extends CrudDao<Token> {
     /**
      * Method finds token by value
+     *
      * @param value token value
      * @return an object of type {@link Optional} for {@link Token}
      */
@@ -21,6 +23,7 @@ public interface TokensDao extends CrudDao<Token> {
 
     /**
      * Method finds all tokens by user
+     *
      * @param user token owner
      * @return token list as {@link List}
      */

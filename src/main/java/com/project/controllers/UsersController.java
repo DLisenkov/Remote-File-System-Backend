@@ -23,9 +23,10 @@ public class UsersController {
 
     /**
      * Method for handling a request to add a user
+     *
      * @param userForm form like {@link UserForm}
      * @return successful execution of a request with a response body in the form of a user DTO from {@link UserDto}
-     * @see UsersService#addUser(UserForm) 
+     * @see UsersService#addUser(UserForm)
      */
     @PostMapping("/registration")
     public ResponseEntity<UserDto> addUser(@RequestBody UserForm userForm) {

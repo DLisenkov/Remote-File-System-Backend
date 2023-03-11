@@ -15,6 +15,7 @@ public class ControllerAdvice {
 
     /**
      * Method exception handler when {@link IllegalArgumentException}
+     *
      * @param illegalArgumentException thrown exception
      * @return {@link ResponseEntity} structure that contains the body of the exception as {@link ExceptionBody}
      */
@@ -28,6 +29,7 @@ public class ControllerAdvice {
 
     /**
      * Method exception handler when {@link IOException}
+     *
      * @param ioException thrown exception
      * @return {@link ResponseEntity} structure that contains the body of the exception as {@link ExceptionBody}
      */

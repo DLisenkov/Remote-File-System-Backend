@@ -11,7 +11,7 @@ import java.util.Optional;
  * Class for working with storage of tokens in a file that implements the {@link TokensDao} interface
  */
 @Component("TokensDaoInFile")
-public class TokensDaoInFile implements TokensDao{
+public class TokensDaoInFile implements TokensDao {
     @Override
     public Optional<Token> find(int id) {
         return Optional.empty();

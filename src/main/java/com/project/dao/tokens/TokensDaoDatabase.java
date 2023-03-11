@@ -14,10 +14,11 @@ import java.util.Optional;
  * Class for working with a token database that implements the {@link TokensDao} interface
  */
 @Component("TokensDaoDatabase")
-public class TokensDaoDatabase implements TokensDao{
+public class TokensDaoDatabase implements TokensDao {
 
     /**
      * Field for accessing tokens repository methods
+     *
      * @see TokensRepository
      */
     @Autowired
@@ -25,6 +26,7 @@ public class TokensDaoDatabase implements TokensDao{
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#find(int)}
+     *
      * @param id unique identificator
      * @return an object of type {@link Optional} for {@link Token}
      * @see TokensRepository#findById(Object)
@@ -36,6 +38,7 @@ public class TokensDaoDatabase implements TokensDao{
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#save(Object)}
+     *
      * @param model data to save
      * @see TokensRepository#save(Object)
      */
@@ -46,6 +49,7 @@ public class TokensDaoDatabase implements TokensDao{
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#update(Object)}
+     *
      * @param model data to update
      * @see TokensRepository#save(Object)
      */
@@ -56,6 +60,7 @@ public class TokensDaoDatabase implements TokensDao{
 
     /**
      * Implements the method {@link com.project.dao.CrudDao#delete(int)}
+     *
      * @param id unique identificator
      * @see TokensRepository#deleteById(Object)
      */
@@ -66,6 +71,7 @@ public class TokensDaoDatabase implements TokensDao{
 
     /**
      * Implements the method {@link CrudDao#findAll()}
+     *
      * @return token list as {@link List}
      * @see TokensRepository#findAll()
      */
@@ -76,6 +82,7 @@ public class TokensDaoDatabase implements TokensDao{
 
     /**
      * Implements the method {@link TokensDao#findOneByValue(String)}
+     *
      * @param value token value
      * @return an object of type {@link Optional} for {@link Token}
      * @see TokensRepository#findOneByValue(String)
@@ -87,6 +94,7 @@ public class TokensDaoDatabase implements TokensDao{
 
     /**
      * Implements the method {@link TokensDao#findAllByUser(User)}
+     *
      * @param user token owner
      * @return token list as {@link List}
      * @see TokensRepository#findAllByUser(User)

@@ -4,6 +4,7 @@ import lombok.Data;
 
 /**
  * The form contains data about the file to be deleted
+ *
  * @see lombok.Data
  */
 @Data

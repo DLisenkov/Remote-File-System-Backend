@@ -10,6 +10,7 @@ public interface LoginService {
 
     /**
      * Method that logs the user into the system
+     *
      * @param loginForm form like {@link LoginForm}
      * @return token DTO like {@link TokenDto}
      */

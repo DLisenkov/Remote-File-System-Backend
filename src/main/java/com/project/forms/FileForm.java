@@ -4,6 +4,7 @@ import lombok.Data;
 
 /**
  * The form contains data about the file
+ *
  * @see lombok.Data
  */
 @Data

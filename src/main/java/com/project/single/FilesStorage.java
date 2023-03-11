@@ -21,12 +21,14 @@ public class FilesStorage {
 
     /**
      * List of files
+     *
      * @see List
      */
     private List<File> files;
 
     /**
      * Parameterless constructor creates a list of files
+     *
      * @see ArrayList
      */
     private FilesStorage() {
@@ -35,6 +37,7 @@ public class FilesStorage {
 
     /**
      * Static method for getting storage
+     *
      * @return storage
      * @see FilesStorage#storage
      */
@@ -44,6 +47,7 @@ public class FilesStorage {
 
     /**
      * Method of getting files from storage
+     *
      * @return files
      * @see FilesStorage#files
      */

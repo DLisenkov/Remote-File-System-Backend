@@ -15,6 +15,7 @@ public interface UsersService {
 
     /**
      * Method for adding a user to the data storage
+     *
      * @param userForm form like {@link UserForm}
      * @return user dto like {@link UserDto}
      */

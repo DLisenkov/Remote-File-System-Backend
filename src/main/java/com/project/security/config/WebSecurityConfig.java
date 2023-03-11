@@ -45,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Method sets filters, provider and permissions to requests
+     *
      * @param http class object {@link HttpSecurity}
      * @throws Exception if there was an error while configuring
      */

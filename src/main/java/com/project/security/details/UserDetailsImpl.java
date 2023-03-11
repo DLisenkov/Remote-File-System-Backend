@@ -19,6 +19,7 @@ public class UserDetailsImpl implements UserDetails {
 
     /**
      * Constructor - creating a new object with specific values
+     *
      * @param user user object
      * @see UserDetailsImpl#user
      */
@@ -28,6 +29,7 @@ public class UserDetailsImpl implements UserDetails {
 
     /**
      * Method of getting user
+     *
      * @return user object
      * @see UserDetailsImpl#user
      */
@@ -42,6 +44,7 @@ public class UserDetailsImpl implements UserDetails {
 
     /**
      * Method of getting hash password
+     *
      * @return hash password
      */
     @Override
@@ -51,6 +54,7 @@ public class UserDetailsImpl implements UserDetails {
 
     /**
      * Method of getting login
+     *
      * @return login
      */
     @Override
@@ -65,6 +69,7 @@ public class UserDetailsImpl implements UserDetails {
 
     /**
      * Method of checking if the account is banned
+     *
      * @return returns false if account is banned
      */
     @Override
@@ -79,6 +84,7 @@ public class UserDetailsImpl implements UserDetails {
 
     /**
      * Method of checking if the account is active
+     *
      * @return returns true if account is active
      */
     @Override

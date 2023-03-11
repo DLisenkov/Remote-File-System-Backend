@@ -18,6 +18,7 @@ public class UserDto {
 
     /**
      * Method for getting user DTO by user
+     *
      * @param user user
      * @return user DTO like {@link UserDto}
      */

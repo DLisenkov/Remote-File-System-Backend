@@ -9,8 +9,8 @@ import java.util.Optional;
 /**
  * Class for working with storage of users in a file that implements the {@link UsersDao} interface
  */
-@Component ("UsersDaoInFile")
-public class UsersDaoInFile implements UsersDao{
+@Component("UsersDaoInFile")
+public class UsersDaoInFile implements UsersDao {
     @Override
     public Optional<User> find(int id) {
         return Optional.empty();

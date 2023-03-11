@@ -3,7 +3,8 @@ package com.project.security.filters;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,11 +17,12 @@ public class CorsFilter extends OncePerRequestFilter {
 
     /**
      * Method sets the permission for complex queries
-     * @param request request data
-     * @param response response data
+     *
+     * @param request     request data
+     * @param response    response data
      * @param filterChain filter chain for passing data to the next filter
      * @throws ServletException if an error occurred while passing to the next filter
-     * @throws IOException if an error occurred while passing to the next filter
+     * @throws IOException      if an error occurred while passing to the next filter
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
